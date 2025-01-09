@@ -1,7 +1,7 @@
 data "azurerm_resource_group" "example" {
-  name = "project-setup-1"
+  name = "Roboshop-Shell"
 }
 
 output "rg" {
-  value = data.azurerm_resource_group
+  value = data.azurerm_resource_group.example
 }
