@@ -1,5 +1,5 @@
 data "azurerm_resource_group" "example" {
-  name = "project-setuo-1"
+  name = "Roboshop-Shell"
 }
 
 output "rg" {
