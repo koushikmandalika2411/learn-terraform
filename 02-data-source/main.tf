@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "3.108.0"
-    }
-  }
-}
 data "azurerm_resource_group" "example" {
   name = "Roboshop-Shell"
 }
