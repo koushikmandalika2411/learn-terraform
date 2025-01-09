@@ -19,6 +19,7 @@ resource "azurerm_network_interface" "example" {
     private_ip_address_allocation = "Dynamic"
   }
 
+}
 resource "azurerm_virtual_machine" "main" {
   name                  = "test-vm"
   location              = data.azurerm_resource_group.example.location
