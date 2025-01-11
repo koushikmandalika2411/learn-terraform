@@ -6,3 +6,8 @@ module "sample" {
 
 variable "x" {}
 variable "y" {}
+
+output "var" {
+  value = var.x
+  value = var.y
+}
