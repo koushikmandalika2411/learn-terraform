@@ -1,5 +1,5 @@
 resource "azurerm_virtual_machine" "main" {
-  name                  = "test-vm"
+  name                  = "test-vmk"
   location              = data.azurerm_resource_group.example.location
   resource_group_name   = data.azurerm_resource_group.example.name
   network_interface_ids = [azurerm_network_interface.example.id]
