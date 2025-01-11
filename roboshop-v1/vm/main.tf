@@ -33,7 +33,7 @@ resource "azurerm_virtual_machine" "main" {
   delete_os_disk_on_termination = true
 
   storage_image_reference {
-    id = "/subscriptions/3303fa75-89ef-466f-b4e0-1cfcc504e6d0/resourceGroups/trail1/providers/Microsoft.Compute/galleries/LDOTrail/images/rhel9-devops-practice/versions/04.12.2024"
+    id = "/subscriptions/3303fa75-89ef-466f-b4e0-1cfcc504e6d0/resourceGroups/Roboshop-Shell/providers/Microsoft.Compute/galleries/trail11"
   }
   storage_os_disk {
     name              = var.component
