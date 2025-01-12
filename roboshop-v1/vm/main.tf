@@ -89,7 +89,7 @@ resource "azurerm_virtual_machine" "main" {
   }
 }
 resource "azurerm_dns_a_record" "example" {
-  name                = "${var.component}-dev.azdevops.shop"
+  name                = "${var.component}-dev"
   zone_name           = "azdevops.shop"
   resource_group_name = data.azurerm_resource_group.example.name
   ttl                 = 10
