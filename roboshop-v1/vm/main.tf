@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    null = {
+      source  = "hashicorp/null"
+      version = "3.2.2"
+    }
+  }
+}
 resource "azurerm_network_interface" "main" {
   name                = "${var.component}-nic"
   location            = data.azurerm_resource_group.example.location
@@ -79,20 +87,6 @@ resource "azurerm_virtual_machine" "main" {
   tags = {
     component = var.component
   }
-  # connection {
-  #   type     = "ssh"
-  #   user     = "testadmin"
-  #   password = "Password1234!"
-  #   host     = azurerm_public_ip.main.ip_address
-  # }
-  #
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "sudo dnf install python3.12-pip -y",
-  #     "sudo pip3.12 install ansible",
-  #     "ansible-pull -i localhost, -U https://github.com/koushikmandalika2411/Roboshop-ansible roboshop.yml -e app_name${var.component} -e ENV=dev"
-  #   ]
-  # }
 }
 resource "azurerm_dns_a_record" "example" {
   name                = "${var.component}-dev.azdevops.shop"
@@ -100,4 +94,21 @@ resource "azurerm_dns_a_record" "example" {
   resource_group_name = data.azurerm_resource_group.example.name
   ttl                 = 10
   records             = [azurerm_network_interface.main.private_ip_address]
+}
+
+resource "null_resource" "ansible" {
+  connection {
+    type     = "ssh"
+    user     = "testadmin"
+    password = "Password1234!"
+    host     = azurerm_public_ip.main.ip_address
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo dnf install python3.12-pip -y",
+      "sudo pip3.12 install ansible",
+      "ansible-pull -i localhost, -U https://github.com/koushikmandalika2411/Roboshop-ansible roboshop.yml -e app_name${var.component} -e ENV=dev"
+    ]
+  }
 }
