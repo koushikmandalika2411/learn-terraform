@@ -33,10 +33,7 @@ resource "azurerm_virtual_machine" "main" {
   delete_os_disk_on_termination = true
 
   storage_image_reference {
-    publisher = "LDOTrail"
-    offer = "rhel9-public"
-    sku = "rhel9-public"
-    version = "latest"
+    id = "/subscriptions/3303fa75-89ef-466f-b4e0-1cfcc504e6d0/resourceGroups/ssss_group/providers/Microsoft.Compute/galleries/coustomPractice/images/coustomImage/versions/1.0.0"
   }
   storage_os_disk {
     name              = var.component
