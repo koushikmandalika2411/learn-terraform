@@ -50,11 +50,11 @@ resource "azurerm_public_ip" "main" {
 }
 
 resource "azurerm_virtual_machine" "main" {
-  name                  = var.component
-  location              = data.azurerm_resource_group.example.location
-  resource_group_name   = data.azurerm_resource_group.example.name
+  name                = var.component
+  location            = data.azurerm_resource_group.example.location
+  resource_group_name = data.azurerm_resource_group.example.name
   network_interface_ids = [azurerm_network_interface.main.id]
-  vm_size               = "Standard_B2s"
+  vm_size = "Standard_B2s"
 
   # Uncomment this line to delete the OS disk automatically when deleting the VM
   delete_os_disk_on_termination = true
@@ -93,4 +93,11 @@ resource "azurerm_virtual_machine" "main" {
   #     "ansible-pull -i localhost, -U https://github.com/koushikmandalika2411/Roboshop-ansible roboshop.yml -e app_name${var.component} -e ENV=dev"
   #   ]
   # }
+}
+resource "azurerm_dns_a_record" "example" {
+  name                = "${var.component}-dev.azdevops.shop"
+  zone_name           = "azdevops.shop"
+  resource_group_name = data.azurerm_resource_group.example.name
+  ttl                 = 10
+  records             = [azurerm_network_interface.main.private_ip_address]
 }
