@@ -1,11 +1,14 @@
-terraform {
-  required_providers {
-    null = {
-      source  = "hashicorp/null"
-      version = "3.2.2"
-    }
+resource "azurerm_public_ip" "main" {
+  name                = "${var.component}-ip"
+  location            = data.azurerm_resource_group.example.location
+  resource_group_name = data.azurerm_resource_group.example.name
+  allocation_method   = "Static"
+
+  tags = {
+    component = var.component
   }
 }
+
 resource "azurerm_network_interface" "main" {
   name                = "${var.component}-nic"
   location            = data.azurerm_resource_group.example.location
@@ -46,18 +49,16 @@ resource "azurerm_network_interface_security_group_association" "main" {
   network_security_group_id = azurerm_network_security_group.main.id
 }
 
-resource "azurerm_public_ip" "main" {
-  name                = "${var.component}-ip"
-  location            = data.azurerm_resource_group.example.location
+resource "azurerm_dns_a_record" "main" {
+  name                = "${var.component}-dev"
+  zone_name           = "azdevops.shop"
   resource_group_name = data.azurerm_resource_group.example.name
-  allocation_method   = "Static"
-
-  tags = {
-    component = var.component
-  }
+  ttl                 = 10
+  records             = [azurerm_network_interface.main.private_ip_address]
 }
 
 resource "azurerm_virtual_machine" "main" {
+  depends_on            = [azurerm_network_interface_security_group_association.main, azurerm_dns_a_record.main]
   name                = var.component
   location            = data.azurerm_resource_group.example.location
   resource_group_name = data.azurerm_resource_group.example.name
@@ -88,23 +89,17 @@ resource "azurerm_virtual_machine" "main" {
     component = var.component
   }
 }
-resource "azurerm_dns_a_record" "example" {
-  name                = "${var.component}-dev"
-  zone_name           = "azdevops.shop"
-  resource_group_name = data.azurerm_resource_group.example.name
-  ttl                 = 10
-  records             = [azurerm_network_interface.main.private_ip_address]
-}
 
 resource "null_resource" "ansible" {
-  connection {
-    type     = "ssh"
-    user     = "testadmin"
-    password = "Password1234!"
-    host     = azurerm_public_ip.main.ip_address
-  }
-
+  depends_on = [azurerm_virtual_machine.main]
   provisioner "remote-exec" {
+    connection {
+      type     = "ssh"
+      user     = "testadmin"
+      password = "Password1234!"
+      host     = azurerm_public_ip.main.ip_address
+    }
+
     inline = [
       "sudo dnf install python3.12-pip -y",
       "sudo pip3.12 install ansible",
