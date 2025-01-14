@@ -16,7 +16,7 @@ variable "token" {}
 # }
 
 data "vault_generic_secret" "secret_data" {
-  path = "test/data/demo-ssh"
+  path = "test/demo-ssh"
 }
 
 resource "local_file" "local" {
